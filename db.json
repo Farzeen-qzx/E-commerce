@@ -1,0 +1,177 @@
+{
+  "products": [
+    {
+      "id": "1",
+      "name": "Adventure Trekking Backpack",
+      "category": "Trekking",
+      "brand": "Nike",
+      "price": 2499,
+      "rating": 4.8,
+      "imageKey": "TrekBackpack",
+      "stock": 12,
+      "description": "A spacious and durable trekking backpack designed for long adventures. It features multiple compartments, comfortable shoulder straps and plenty of storage space for your trekking essentials."
+    },
+    {
+      "id": "2",
+      "name": "Mountain Hiking Cap",
+      "category": "Hiking",
+      "brand": "Adidas",
+      "price": 599,
+      "rating": 4.5,
+      "imageKey": "Hikecap",
+      "stock": 12,
+      "description": "A lightweight and comfortable hiking cap that protects your face from direct sunlight. Its breathable material makes it suitable for trekking, hiking and everyday outdoor activities."
+    },
+    {
+      "id": "3",
+      "name": "Professional Trekking Shoes",
+      "category": "Trekking",
+      "brand": "Puma",
+      "price": 3299,
+      "rating": 4.9,
+      "imageKey": "Trekshoe",
+      "stock": 12,
+      "description": "Professional trekking shoes built for challenging outdoor trails. They provide excellent grip, ankle support and cushioning to help you walk comfortably on rocky and uneven surfaces.",
+      "isDeleted": false
+    },
+    {
+      "id": "4",
+      "name": "Comfort Camping Mattress",
+      "category": "Camping",
+      "brand": "Nike",
+      "price": 1899,
+      "rating": 4.6,
+      "imageKey": "Campmattress",
+      "stock": 12,
+      "description": "A comfortable and portable camping mattress designed to provide better rest during outdoor trips. Its lightweight construction makes it easy to carry and suitable for camping adventures."
+    },
+    {
+      "id": "5",
+      "name": "Waterproof Camping Tent",
+      "category": "Camping",
+      "brand": "Adidas",
+      "price": 4599,
+      "rating": 4.8,
+      "imageKey": "Camptent",
+      "stock": 12,
+      "description": "A spacious waterproof camping tent designed to protect you from rain and wind. It offers a comfortable shelter for outdoor adventures and is easy to set up and carry."
+    },
+    {
+      "id": "6",
+      "name": "Outdoor Hiking Jacket",
+      "category": "Hiking",
+      "brand": "Puma",
+      "price": 2799,
+      "rating": 4.7,
+      "imageKey": "Hikejacket",
+      "stock": 12,
+      "description": "A versatile outdoor hiking jacket designed to provide comfort and protection during outdoor activities. Its practical design makes it suitable for cool weather, trekking and hiking."
+    },
+    {
+      "id": "7",
+      "name": "Stainless Steel Water Bottle",
+      "category": "Trekking",
+      "brand": "Nike",
+      "price": 799,
+      "rating": 4.4,
+      "imageKey": "Trekbottle",
+      "stock": 12,
+      "description": "A durable stainless steel water bottle that helps you stay hydrated during long journeys. Its portable design makes it convenient to carry while trekking, hiking or travelling."
+    },
+    {
+      "id": "8",
+      "name": "Portable Camping Lantern",
+      "category": "Camping",
+      "brand": "Adidas",
+      "price": 999,
+      "rating": 4.5,
+      "imageKey": "Camplantern",
+      "stock": 12,
+      "description": "A portable camping lantern that provides convenient lighting during nighttime outdoor activities. Its compact design makes it easy to pack and useful for camping and emergency situations."
+    },
+    {
+      "id": "9",
+      "name": "Trekking Hiking Poles",
+      "category": "Trekking",
+      "brand": "Puma",
+      "price": 1299,
+      "rating": 4.6,
+      "imageKey": "Trekpoles",
+      "stock": 12,
+      "description": "Reliable trekking poles designed to improve balance and stability on uneven trails. They provide additional support while climbing hills, walking downhill and exploring difficult terrain."
+    },
+    {
+      "id": "10",
+      "name": "Outdoor Travel Sunglasses",
+      "category": "Hiking",
+      "brand": "Nike",
+      "price": 899,
+      "rating": 4.3,
+      "imageKey": "Hikeglass",
+      "stock": 12,
+      "description": "Stylish outdoor sunglasses designed to protect your eyes from bright sunlight. Their lightweight frame makes them comfortable to wear during hiking, travelling and other outdoor activities."
+    },
+    {
+      "id": "11",
+      "name": "Camping Sleeping Bag",
+      "category": "Camping",
+      "brand": "Adidas",
+      "price": 2199,
+      "rating": 4.7,
+      "imageKey": "Sleepbag",
+      "stock": 12,
+      "description": "A comfortable camping sleeping bag designed to provide warmth and relaxation during overnight outdoor trips. Its portable design makes it easy to carry and store."
+    },
+    {
+      "id": "12",
+      "name": "Hiking Shoes",
+      "category": "Hiking",
+      "brand": "Puma",
+      "price": 499,
+      "rating": 4.2,
+      "imageKey": "Hikeshoe",
+      "stock": 12,
+      "description": "Lightweight hiking shoes designed for everyday outdoor exploration. They offer a comfortable fit and practical grip for walking on trails and other outdoor surfaces."
+    },
+    {
+      "id": "13",
+      "name": "Trekking Stick",
+      "category": "Trekking",
+      "brand": "Nike",
+      "price": 699,
+      "rating": 4.4,
+      "imageKey": "Trekstick",
+      "stock": 12,
+      "description": "A practical trekking stick that provides extra balance and support while walking on challenging trails. It is suitable for mountain climbing, hiking and long-distance trekking."
+    },
+    {
+      "id": "14",
+      "name": "Portable Camping Chair",
+      "category": "Camping",
+      "brand": "Adidas",
+      "price": 1599,
+      "rating": 4.6,
+      "imageKey": "Campchair",
+      "stock": 12,
+      "description": "A foldable and portable camping chair designed for comfortable seating during outdoor adventures. Its compact design makes it convenient to carry for camping, fishing and picnics."
+    },
+    {
+      "id": "15",
+      "name": "Camping Backpack",
+      "category": "Camping",
+      "brand": "Puma",
+      "price": 749,
+      "rating": 4.5,
+      "imageKey": "Campbackpack",
+      "stock": 12,
+      "description": "A compact camping backpack with practical storage space for your outdoor essentials. Its lightweight design makes it suitable for short trips, camping and everyday travel.",
+      "isDeleted": false
+    }
+  ],
+  "users": [],
+  "orders": [],
+  "cart": [],
+  "wishlist": [],
+  "admins": [],
+  "$schema": "./node_modules/json-server/schema.json"
+}
