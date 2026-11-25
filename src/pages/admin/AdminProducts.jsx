@@ -1,4 +1,5 @@
 import { useState } from "react";
+import toast from "react-hot-toast";
 
 import {
     useQuery,
@@ -81,6 +82,14 @@ function AdminProducts() {
             resetForm();
             setCurrentPage(1);
 
+            toast.success("Product added successfully!");
+
+        },
+
+        onError: function() {
+
+            toast.error("Failed to add product.");
+
         }
 
     });
@@ -94,6 +103,14 @@ function AdminProducts() {
 
             refreshProducts();
             resetForm();
+
+            toast.success("Product updated successfully!");
+
+        },
+
+        onError: function() {
+
+            toast.error("Failed to update product.");
 
         }
 
@@ -117,6 +134,14 @@ function AdminProducts() {
 
             refreshProducts();
 
+            toast.success("Product moved to Trash successfully!");
+
+        },
+
+        onError: function() {
+
+            toast.error("Failed to move product to Trash.");
+
         }
 
     });
@@ -129,6 +154,14 @@ function AdminProducts() {
         onSuccess: function() {
 
             refreshProducts();
+
+            toast.success("Product deleted permanently!");
+
+        },
+
+        onError: function() {
+
+            toast.error("Failed to delete product.");
 
         }
 
@@ -458,24 +491,6 @@ function AdminProducts() {
                         )}
 
                     </form>
-
-                )}
-
-                {/* Trash Error */}
-                {trashMutation.isError && (
-
-                    <p className="text-red-600 mb-4">
-                        Failed to move product to Trash. Please try again.
-                    </p>
-
-                )}
-
-                {/* Permanent Delete Error */}
-                {deleteMutation.isError && (
-
-                    <p className="text-red-600 mb-4">
-                        Failed to permanently delete product. Please try again.
-                    </p>
 
                 )}
 

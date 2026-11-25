@@ -1,4 +1,3 @@
-
 import {
     useQuery,
     useMutation,
@@ -8,6 +7,8 @@ import {
 import { useSelector } from "react-redux";
 
 import axios from "axios";
+
+import toast from "react-hot-toast";
 
 import {
     fetchCart,
@@ -139,6 +140,16 @@ function useCart() {
                 queryKey: ["cart", user.id]
 
             });
+
+            toast.success("Product added to cart!");
+        },
+
+
+        onError: function(error) {
+
+            toast.error(
+                error.message || "Failed to add product to cart."
+            );
         }
     });
 

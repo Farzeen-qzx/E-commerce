@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { useSelector } from "react-redux";
+import toast from "react-hot-toast";
 
 import {
     useQuery,
@@ -16,7 +17,6 @@ import {
 
 import useCart from "../../hooks/useCart";
 
-
 function Wishlist() {
 
     const navigate = useNavigate();
@@ -29,12 +29,10 @@ function Wishlist() {
     const [currentPage, setCurrentPage] = useState(1);
     const itemsPerPage = 4;
 
-
     // Get logged-in user from Redux
     const user = useSelector(function(state) {
         return state.auth.user;
     });
-
 
     // Fetch wishlist using TanStack Query
     const {
@@ -54,7 +52,6 @@ function Wishlist() {
 
     });
 
-
     // Pagination calculations
     const totalPages = Math.ceil(wishlist.length / itemsPerPage);
 
@@ -63,7 +60,6 @@ function Wishlist() {
     const endIndex = startIndex + itemsPerPage;
 
     const currentProducts = wishlist.slice(startIndex, endIndex);
-
 
     // Remove wishlist mutation
     const removeMutation = useMutation({
@@ -78,10 +74,17 @@ function Wishlist() {
                 queryKey: ["wishlist", user.id]
             });
 
+            toast.success("Product removed from wishlist!");
+
+        },
+
+        onError: function() {
+
+            toast.error("Failed to remove product from wishlist.");
+
         }
 
     });
-
 
     // Remove product from wishlist
     function handleRemove(product) {
@@ -89,7 +92,6 @@ function Wishlist() {
         removeMutation.mutate(product.id);
 
     }
-
 
     // Add product to cart
     function handleAddToCart(product) {
@@ -105,7 +107,6 @@ function Wishlist() {
 
     }
 
-
     // Previous Page
     function handlePrevious() {
 
@@ -117,7 +118,6 @@ function Wishlist() {
 
     }
 
-
     // Next Page
     function handleNext() {
 
@@ -128,7 +128,6 @@ function Wishlist() {
         }
 
     }
-
 
     // Not logged in
     if (!user) {
@@ -156,7 +155,6 @@ function Wishlist() {
 
     }
 
-
     // Loading
     if (isLoading) {
 
@@ -173,7 +171,6 @@ function Wishlist() {
         );
 
     }
-
 
     // Error
     if (isError) {
@@ -192,7 +189,6 @@ function Wishlist() {
 
     }
 
-
     return (
 
         <section className="min-h-screen bg-gray-50 py-12 px-6">
@@ -202,7 +198,6 @@ function Wishlist() {
                 <h1 className="text-4xl font-bold text-center mb-10">
                     My Wishlist
                 </h1>
-
 
                 {/* Empty Wishlist */}
 
@@ -227,7 +222,6 @@ function Wishlist() {
 
                 ) : (
 
-
                     <>
 
                         {/* Wishlist Products */}
@@ -249,7 +243,6 @@ function Wishlist() {
                                             className="w-full h-56 object-contain p-4"
                                         />
 
-
                                         <div className="p-5">
 
                                             <p className="text-sm text-green-700">
@@ -268,7 +261,6 @@ function Wishlist() {
                                                 ⭐ {product.rating}
                                             </p>
 
-
                                             {/* Add to Cart */}
 
                                             <button
@@ -279,7 +271,6 @@ function Wishlist() {
                                             >
                                                 Add to Cart
                                             </button>
-
 
                                             {/* Remove from Wishlist */}
 
@@ -303,7 +294,6 @@ function Wishlist() {
 
                         </div>
 
-
                         {/* Pagination */}
 
                         {totalPages > 1 && (
@@ -317,7 +307,6 @@ function Wishlist() {
                                 >
                                     Previous
                                 </button>
-
 
                                 {Array.from(
                                     { length: totalPages },
@@ -343,7 +332,6 @@ function Wishlist() {
 
                                     }
                                 )}
-
 
                                 <button
                                     onClick={handleNext}

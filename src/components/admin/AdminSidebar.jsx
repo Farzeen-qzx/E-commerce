@@ -36,13 +36,6 @@ function AdminSidebar() {
                 </NavLink>
 
                 <NavLink
-                    to="/admin/trash"
-                    className={getLinkStyle}
-                >
-                    Trash
-                </NavLink>
-
-                <NavLink
                     to="/admin/users"
                     className={getLinkStyle}
                 >
@@ -54,6 +47,13 @@ function AdminSidebar() {
                     className={getLinkStyle}
                 >
                     Orders
+                </NavLink>
+
+                <NavLink
+                    to="/admin/trash"
+                    className={getLinkStyle}
+                >
+                    Trash
                 </NavLink>
 
             </nav>

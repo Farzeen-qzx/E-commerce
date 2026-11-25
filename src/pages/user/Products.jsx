@@ -16,6 +16,8 @@ import {
     SiPuma
 } from "react-icons/si";
 
+import toast from "react-hot-toast";
+
 import { fetchProducts } from "../../api/productApi";
 
 import {
@@ -104,11 +106,8 @@ function Products() {
     });
 
 
-    // States
+    // Search State
     const [search, setSearch] = useState("");
-
-    const [message, setMessage] = useState("");
-    const [wishlistMessage, setWishlistMessage] = useState("");
 
 
     // Pagination and Sorting States
@@ -167,25 +166,17 @@ function Products() {
 
         onSuccess: function(data, product) {
 
-            setWishlistMessage(product.name + " added to wishlist!");
-
             queryClient.invalidateQueries({
                 queryKey: ["wishlist", user.id]
             });
 
-            setTimeout(function() {
-                setWishlistMessage("");
-            }, 2000);
+            toast.success(product.name + " added to wishlist!");
 
         },
 
         onError: function() {
 
-            setWishlistMessage("Unable to add product to wishlist.");
-
-            setTimeout(function() {
-                setWishlistMessage("");
-            }, 2000);
+            toast.error("Unable to add product to wishlist.");
 
         }
 
@@ -203,25 +194,17 @@ function Products() {
 
         onSuccess: function(data, item) {
 
-            setWishlistMessage(item.productName + " removed from wishlist!");
-
             queryClient.invalidateQueries({
                 queryKey: ["wishlist", user.id]
             });
 
-            setTimeout(function() {
-                setWishlistMessage("");
-            }, 2000);
+            toast.success(item.productName + " removed from wishlist!");
 
         },
 
         onError: function() {
 
-            setWishlistMessage("Unable to remove product from wishlist.");
-
-            setTimeout(function() {
-                setWishlistMessage("");
-            }, 2000);
+            toast.error("Unable to remove product from wishlist.");
 
         }
 
@@ -301,7 +284,7 @@ function Products() {
 
         if (!user) {
 
-            alert("Please login to add products to your cart.");
+            toast.error("Please login to add products to your cart.");
 
             navigate("/login");
 
@@ -309,43 +292,8 @@ function Products() {
 
         }
 
-
-        if (product.stock <= 0) {
-
-            setMessage("Sorry, this product is out of stock.");
-
-            setTimeout(function() {
-                setMessage("");
-            }, 2000);
-
-            return;
-
-        }
-
-
-        addToCart(product, {
-
-            onSuccess: function() {
-
-                setMessage(product.name + " added to cart successfully!");
-
-                setTimeout(function() {
-                    setMessage("");
-                }, 2000);
-
-            },
-
-            onError: function(error) {
-
-                setMessage(error.message || "Unable to add product to cart.");
-
-                setTimeout(function() {
-                    setMessage("");
-                }, 2000);
-
-            }
-
-        });
+        // useCart handles success and error notifications
+        addToCart(product);
 
     }
 
@@ -355,7 +303,7 @@ function Products() {
 
         if (!user) {
 
-            alert("Please login to add products to your wishlist.");
+            toast.error("Please login to add products to your wishlist.");
 
             navigate("/login");
 
@@ -589,42 +537,6 @@ function Products() {
                         </option>
 
                     </select>
-
-                </div>
-
-
-                {/* Toast Notifications */}
-
-                <div className="fixed top-5 right-5 z-[100] space-y-3">
-
-                    {message && (
-
-                        <div className="bg-green-800 text-white px-6 py-4 rounded-xl shadow-2xl flex items-center gap-3 animate-pulse">
-
-                            <span className="text-xl">✓</span>
-
-                            <p className="font-medium">
-                                {message}
-                            </p>
-
-                        </div>
-
-                    )}
-
-
-                    {wishlistMessage && (
-
-                        <div className="bg-pink-600 text-white px-6 py-4 rounded-xl shadow-2xl flex items-center gap-3">
-
-                            <span className="text-xl">❤️</span>
-
-                            <p className="font-medium">
-                                {wishlistMessage}
-                            </p>
-
-                        </div>
-
-                    )}
 
                 </div>
 

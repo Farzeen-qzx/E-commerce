@@ -4,6 +4,8 @@ import {
     useQueryClient
 } from "@tanstack/react-query";
 
+import toast from "react-hot-toast";
+
 import {
     getAdminProducts,
     updateAdminProduct,
@@ -49,7 +51,19 @@ function AdminTrash() {
 
         },
 
-        onSuccess: refreshProducts
+        onSuccess: function() {
+
+            refreshProducts();
+
+            toast.success("Product restored successfully!");
+
+        },
+
+        onError: function() {
+
+            toast.error("Failed to restore product.");
+
+        }
 
     });
 
@@ -58,7 +72,19 @@ function AdminTrash() {
 
         mutationFn: deleteAdminProduct,
 
-        onSuccess: refreshProducts
+        onSuccess: function() {
+
+            refreshProducts();
+
+            toast.success("Product permanently deleted!");
+
+        },
+
+        onError: function() {
+
+            toast.error("Failed to delete product.");
+
+        }
 
     });
 
@@ -77,7 +103,21 @@ function AdminTrash() {
 
         },
 
-        onSuccess: refreshProducts
+        onSuccess: function() {
+
+            refreshProducts();
+
+            toast.success("Trash emptied successfully!");
+
+        },
+
+        onError: function() {
+
+            refreshProducts();
+
+            toast.error("Failed to empty Trash. Please try again.");
+
+        }
 
     });
 

@@ -9,7 +9,8 @@
       "rating": 4.8,
       "imageKey": "TrekBackpack",
       "stock": 12,
-      "description": "A spacious and durable trekking backpack designed for long adventures. It features multiple compartments, comfortable shoulder straps and plenty of storage space for your trekking essentials."
+      "description": "A spacious and durable trekking backpack designed for long adventures. It features multiple compartments, comfortable shoulder straps and plenty of storage space for your trekking essentials.",
+      "isDeleted": false
     },
     {
       "id": "2",
@@ -168,10 +169,24 @@
       "isDeleted": false
     }
   ],
-  "users": [],
+  "users": [
+    {
+      "fullName": "Farzeen qzx",
+      "email": "farzeenqzx@gmail.com",
+      "password": "Farzeen@123",
+      "id": "0q9K49Cf3IA",
+      "isBlocked": false
+    }
+  ],
   "orders": [],
   "cart": [],
   "wishlist": [],
-  "admins": [],
+  "admins": [
+    {
+      "email": "admin@gmail.com",
+      "password": "Admin@123",
+      "id": "fmVV7kvdfSA"
+    }
+  ],
   "$schema": "./node_modules/json-server/schema.json"
 }

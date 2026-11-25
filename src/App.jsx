@@ -1,5 +1,5 @@
-
 import { useEffect } from "react";
+import { Toaster, toast } from "react-hot-toast";
 
 import {
     Route,
@@ -43,54 +43,37 @@ function App() {
 
     const isAdminRoute = location.pathname.startsWith("/admin");
 
-    // Clear toast message after 3 seconds
+    // Show React Hot Toast Notification
     useEffect(function() {
 
         if (!message) {
             return;
         }
 
-        const timer = setTimeout(function() {
+        toast.success(message, {
+            id: `route-toast-${location.key}`
+        });
 
-            navigate(location.pathname, {
-                replace: true,
-                state: null
-            });
+        // Clear notification message from route state
+        navigate(location.pathname, {
+            replace: true,
+            state: null
+        });
 
-        }, 3000);
-
-        return function() {
-            clearTimeout(timer);
-        };
-
-    }, [message, location.pathname, navigate]);
+    }, [message, location.pathname, location.key, navigate]);
 
     return (
         <>
 
+            {/* React Hot Toast */}
+            <Toaster
+                position="top-right"
+                toastOptions={{
+                    duration: 3000
+                }}
+            />
+
             {!isAdminRoute && <Navbar />}
-
-            {/* Toast Notification */}
-
-            {message && (
-
-                <div className="fixed top-5 right-5 z-[100] space-y-3">
-
-                    <div className="bg-green-800 text-white px-6 py-4 rounded-xl shadow-2xl flex items-center gap-3 animate-pulse">
-
-                        <span className="text-xl">
-                            ✓
-                        </span>
-
-                        <p className="font-medium">
-                            {message}
-                        </p>
-
-                    </div>
-
-                </div>
-
-            )}
 
             <Routes>
 

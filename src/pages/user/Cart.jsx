@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { Link } from "react-router-dom";
 import { useQuery } from "@tanstack/react-query";
+import toast from "react-hot-toast";
 
 import useCart from "../../hooks/useCart";
 import { fetchProducts } from "../../api/productApi";
@@ -21,8 +22,6 @@ function Cart() {
         updateQuantity,
         removeFromCart
     } = useCart();
-
-    const [message, setMessage] = useState("");
 
     // Pagination
     const [currentPage, setCurrentPage] = useState(1);
@@ -139,17 +138,6 @@ function Cart() {
     const deliveryCharge = totalPrice >= 3000 ? 0 : 99;
     const finalTotal = totalPrice + deliveryCharge;
 
-    // Show Message
-    function showMessage(text) {
-
-        setMessage(text);
-
-        setTimeout(function() {
-            setMessage("");
-        }, 2500);
-
-    }
-
     // Increase Quantity
     function handleIncrease(product) {
 
@@ -157,7 +145,7 @@ function Cart() {
 
         if (stock !== null && product.quantity >= stock) {
 
-            showMessage("Only " + stock + " items are available.");
+            toast.error("Only " + stock + " items are available.");
             return;
 
         }
@@ -167,7 +155,7 @@ function Cart() {
             quantity: product.quantity + 1
         }, {
             onError: function(error) {
-                showMessage(error.message || "Unable to update quantity.");
+                toast.error(error.message || "Unable to update quantity.");
             }
         });
 
@@ -183,7 +171,7 @@ function Cart() {
                 quantity: product.quantity - 1
             }, {
                 onError: function(error) {
-                    showMessage(error.message || "Unable to update quantity.");
+                    toast.error(error.message || "Unable to update quantity.");
                 }
             });
 
@@ -262,13 +250,6 @@ function Cart() {
                 <h1 className="text-3xl font-bold text-gray-800 mb-8">
                     My Shopping Cart
                 </h1>
-
-                {/* Message */}
-                {message && (
-                    <div className="bg-red-100 text-red-700 px-5 py-3 rounded-lg mb-6">
-                        {message}
-                    </div>
-                )}
 
                 {/* Unavailable Product Warning */}
                 {unavailableProducts.length > 0 && (
@@ -552,7 +533,7 @@ function Cart() {
 
                                         event.preventDefault();
 
-                                        showMessage(
+                                        toast.error(
                                             "Please remove unavailable products before checkout."
                                         );
 
@@ -562,7 +543,7 @@ function Cart() {
 
                                         event.preventDefault();
 
-                                        showMessage("Your cart is empty.");
+                                        toast.error("Your cart is empty.");
 
                                     }
 

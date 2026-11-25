@@ -16,6 +16,8 @@ import {
     SiPuma
 } from "react-icons/si";
 
+import toast from "react-hot-toast";
+
 import { fetchProducts } from "../../api/productApi";
 
 import {
@@ -35,7 +37,7 @@ const brandLogos = {
 };
 
 
-const images = import.meta.glob("../assets/*.png", {
+const images = import.meta.glob("/src/assets/*.png", {
     eager: true,
     query: "?url",
     import: "default"
@@ -98,8 +100,6 @@ function ProductDetails() {
 
     const [selectedView, setSelectedView] = useState("Front");
 
-    const [message, setMessage] = useState("");
-
 
     // Fetch products
     const {
@@ -156,7 +156,12 @@ function ProductDetails() {
                 queryKey: ["wishlist", user.id]
             });
 
-            setMessage("Product added to wishlist!");
+            toast.success("Product added to wishlist!");
+        },
+
+        onError: function() {
+
+            toast.error("Failed to add product to wishlist.");
         }
     });
 
@@ -175,7 +180,12 @@ function ProductDetails() {
                 queryKey: ["wishlist", user.id]
             });
 
-            setMessage("Product removed from wishlist!");
+            toast.success("Product removed from wishlist!");
+        },
+
+        onError: function() {
+
+            toast.error("Failed to remove product from wishlist.");
         }
     });
 
@@ -273,34 +283,15 @@ function ProductDetails() {
 
         if (!user) {
 
-            alert("Please login to add products to your cart.");
+            toast.error("Please login to add products to your cart.");
 
             navigate("/login");
 
             return;
         }
 
-
-        if (product.stock <= 0) {
-
-            setMessage("Sorry, this product is out of stock.");
-
-            return;
-        }
-
-
-        addToCart(product, {
-
-            onSuccess: function() {
-
-                setMessage("Product added to cart successfully!");
-            },
-
-            onError: function(error) {
-
-                setMessage(error.message || "Unable to add product to cart.");
-            }
-        });
+        // useCart handles stock validation and toast notifications
+        addToCart(product);
     }
 
 
@@ -309,7 +300,7 @@ function ProductDetails() {
 
         if (!user) {
 
-            alert("Please login to add products to your wishlist.");
+            toast.error("Please login to manage your wishlist.");
 
             navigate("/login");
 
@@ -352,18 +343,6 @@ function ProductDetails() {
                 >
                     ← Back to Products
                 </button>
-
-
-                {/* Message */}
-
-                {message && (
-
-                    <div className="mb-5 p-3 bg-green-100 text-green-800 rounded-lg">
-
-                        {message}
-
-                    </div>
-                )}
 
 
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-10 bg-white p-6 md:p-10 rounded-2xl shadow">
