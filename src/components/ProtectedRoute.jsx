@@ -2,20 +2,17 @@ import { useSelector } from "react-redux";
 import { Navigate, useLocation } from "react-router-dom";
 
 function ProtectedRoute({ children }) {
+  const user = useSelector(function (state) {
+    return state.auth.user;
+  });
 
-    const user = useSelector(function(state) {
-        return state.auth.user;
-    });
+  const location = useLocation();
 
-    const location = useLocation();
+  if (!user) {
+    return <Navigate to="/login" state={{ from: location }} replace />;
+  }
 
-    if (!user) {
-        return (
-            <Navigate to="/login" state={{ from: location }} replace/>
-        );
-    }
-
-    return children;
+  return children;
 }
 
 export default ProtectedRoute;

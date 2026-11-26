@@ -1,42 +1,39 @@
 import { createSlice } from "@reduxjs/toolkit";
 
 function getSavedUser() {
-    const savedUser = localStorage.getItem("trailnestUser");
+  const savedUser = localStorage.getItem("trailnestUser");
 
-    if (savedUser) {
-        try {
-            return JSON.parse(savedUser);
-        } catch {
-       localStorage.removeItem("trailnestUser");
-     } 
+  if (savedUser) {
+    try {
+      return JSON.parse(savedUser);
+    } catch {
+      localStorage.removeItem("trailnestUser");
     }
+  }
 
-    return null;
+  return null;
 }
 
 const authSlice = createSlice({
-    name: "auth",
+  name: "auth",
 
-    initialState: {
-        user: getSavedUser()
+  initialState: {
+    user: getSavedUser(),
+  },
+
+  reducers: {
+    setCredentials: function (state, action) {
+      state.user = action.payload;
+
+      localStorage.setItem("trailnestUser", JSON.stringify(action.payload));
     },
 
-    reducers: {
-        setCredentials: function(state, action) {
-            state.user = action.payload;
+    logout: function (state) {
+      state.user = null;
 
-            localStorage.setItem(
-                "trailnestUser",
-                JSON.stringify(action.payload)
-            );
-        },
-
-        logout: function(state) {
-            state.user = null;
-
-            localStorage.removeItem("trailnestUser");
-        }
-    }
+      localStorage.removeItem("trailnestUser");
+    },
+  },
 });
 
 export const { setCredentials, logout } = authSlice.actions;

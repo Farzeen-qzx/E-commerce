@@ -1,12 +1,7 @@
 import { useEffect } from "react";
 import { Toaster, toast } from "react-hot-toast";
 
-import {
-    Route,
-    Routes,
-    useLocation,
-    useNavigate
-} from "react-router-dom";
+import { Route, Routes, useLocation, useNavigate } from "react-router-dom";
 
 // User Pages
 import Home from "./pages/user/Home";
@@ -24,6 +19,7 @@ import Profile from "./pages/user/profile";
 // Admin Pages
 import Dashboard from "./pages/admin/Dashboard";
 import AdminProducts from "./pages/admin/AdminProducts";
+import AdminProductDetails from "./pages/admin/AdminProductDetails";
 import AdminTrash from "./pages/admin/AdminTrash";
 import AdminUsers from "./pages/admin/AdminUsers";
 import AdminOrders from "./pages/admin/AdminOrders";
@@ -35,179 +31,167 @@ import AdminProtectedRoute from "./components/admin/AdminProtectedRoute";
 import Footer from "./components/Footer";
 
 function App() {
+  const location = useLocation();
+  const navigate = useNavigate();
 
-    const location = useLocation();
-    const navigate = useNavigate();
+  const message = location.state?.toastMessage || "";
 
-    const message = location.state?.toastMessage || "";
+  const isAdminRoute = location.pathname.startsWith("/admin");
 
-    const isAdminRoute = location.pathname.startsWith("/admin");
+  // Show React Hot Toast Notification
+  useEffect(
+    function () {
+      if (!message) {
+        return;
+      }
 
-    // Show React Hot Toast Notification
-    useEffect(function() {
+      toast.success(message, {
+        id: `route-toast-${location.key}`,
+      });
 
-        if (!message) {
-            return;
-        }
+      // Clear notification message from route state
+      navigate(location.pathname, {
+        replace: true,
+        state: null,
+      });
+    },
+    [message, location.pathname, location.key, navigate],
+  );
 
-        toast.success(message, {
-            id: `route-toast-${location.key}`
-        });
+  return (
+    <>
+      {/* React Hot Toast */}
+      <Toaster
+        position="top-right"
+        toastOptions={{
+          duration: 3000,
+        }}
+      />
 
-        // Clear notification message from route state
-        navigate(location.pathname, {
-            replace: true,
-            state: null
-        });
+      {!isAdminRoute && <Navbar />}
 
-    }, [message, location.pathname, location.key, navigate]);
+      <Routes>
+        {/* User Routes */}
 
-    return (
-        <>
+        <Route path="/" element={<Home />} />
 
-            {/* React Hot Toast */}
-            <Toaster
-                position="top-right"
-                toastOptions={{
-                    duration: 3000
-                }}
-            />
+        <Route path="/products" element={<Products />} />
 
-            {!isAdminRoute && <Navbar />}
+        <Route path="/products/:id" element={<ProductDetails />} />
 
-            <Routes>
+        <Route
+          path="/cart"
+          element={
+            <ProtectedRoute>
+              <Cart />
+            </ProtectedRoute>
+          }
+        />
 
-                {/* User Routes */}
+        <Route
+          path="/checkout"
+          element={
+            <ProtectedRoute>
+              <Checkout />
+            </ProtectedRoute>
+          }
+        />
 
-                <Route
-                    path="/"
-                    element={<Home />}
-                />
+        <Route
+          path="/orders"
+          element={
+            <ProtectedRoute>
+              <Orders />
+            </ProtectedRoute>
+          }
+        />
 
-                <Route
-                    path="/products"
-                    element={<Products />}
-                />
+        <Route
+          path="/profile"
+          element={
+            <ProtectedRoute>
+              <Profile />
+            </ProtectedRoute>
+          }
+        />
 
-                <Route
-                    path="/products/:id"
-                    element={<ProductDetails />}
-                />
+        <Route path="/order-confirmation" element={<OrderConfirmation />} />
 
-                <Route
-                    path="/cart"
-                    element={
-                        <ProtectedRoute>
-                            <Cart />
-                        </ProtectedRoute>
-                    }
-                />
+        <Route
+          path="/wishlist"
+          element={
+            <ProtectedRoute>
+              <Wishlist />
+            </ProtectedRoute>
+          }
+        />
 
-                <Route
-                    path="/checkout"
-                    element={
-                        <ProtectedRoute>
-                            <Checkout />
-                        </ProtectedRoute>
-                    }
-                />
+        <Route path="/register" element={<Register />} />
 
-                <Route
-                    path="/orders"
-                    element={
-                        <ProtectedRoute>
-                            <Orders />
-                        </ProtectedRoute>
-                    }
-                />
+        <Route path="/login" element={<Login />} />
 
-                <Route
-                    path="/profile"
-                    element={
-                        <ProtectedRoute>
-                            <Profile />
-                        </ProtectedRoute>
-                    }
-                />
+        {/* Admin Routes */}
 
-                <Route
-                    path="/order-confirmation"
-                    element={<OrderConfirmation />}
-                />
+        <Route
+          path="/admin/dashboard"
+          element={
+            <AdminProtectedRoute>
+              <Dashboard />
+            </AdminProtectedRoute>
+          }
+        />
 
-                <Route
-                    path="/wishlist"
-                    element={
-                        <ProtectedRoute>
-                            <Wishlist />
-                        </ProtectedRoute>
-                    }
-                />
+        {/* Admin Products */}
+        <Route
+          path="/admin/products"
+          element={
+            <AdminProtectedRoute>
+              <AdminProducts />
+            </AdminProtectedRoute>
+          }
+        />
 
-                <Route
-                    path="/register"
-                    element={<Register />}
-                />
+        {/* Admin Product Details */}
+        <Route
+          path="/admin/products/:id"
+          element={
+            <AdminProtectedRoute>
+              <AdminProductDetails />
+            </AdminProtectedRoute>
+          }
+        />
 
-                <Route
-                    path="/login"
-                    element={<Login />}
-                />
+        <Route
+          path="/admin/trash"
+          element={
+            <AdminProtectedRoute>
+              <AdminTrash />
+            </AdminProtectedRoute>
+          }
+        />
 
-                {/* Admin Routes */}
+        <Route
+          path="/admin/users"
+          element={
+            <AdminProtectedRoute>
+              <AdminUsers />
+            </AdminProtectedRoute>
+          }
+        />
 
-                <Route
-                    path="/admin/dashboard"
-                    element={
-                        <AdminProtectedRoute>
-                            <Dashboard />
-                        </AdminProtectedRoute>
-                    }
-                />
+        <Route
+          path="/admin/orders"
+          element={
+            <AdminProtectedRoute>
+              <AdminOrders />
+            </AdminProtectedRoute>
+          }
+        />
+      </Routes>
 
-                <Route
-                    path="/admin/products"
-                    element={
-                        <AdminProtectedRoute>
-                            <AdminProducts />
-                        </AdminProtectedRoute>
-                    }
-                />
-
-                <Route
-                    path="/admin/trash"
-                    element={
-                        <AdminProtectedRoute>
-                            <AdminTrash />
-                        </AdminProtectedRoute>
-                    }
-                />
-
-                <Route
-                    path="/admin/users"
-                    element={
-                        <AdminProtectedRoute>
-                            <AdminUsers />
-                        </AdminProtectedRoute>
-                    }
-                />
-
-                <Route
-                    path="/admin/orders"
-                    element={
-                        <AdminProtectedRoute>
-                            <AdminOrders />
-                        </AdminProtectedRoute>
-                    }
-                />
-
-            </Routes>
-
-            {!isAdminRoute && <Footer />}
-
-        </>
-    );
-
+      {!isAdminRoute && <Footer />}
+    </>
+  );
 }
 
 export default App;
