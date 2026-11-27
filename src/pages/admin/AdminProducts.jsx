@@ -1,29 +1,22 @@
 import { useState } from "react";
 import toast from "react-hot-toast";
-
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
-
 import { useNavigate } from "react-router-dom";
-
 import {
   getAdminProducts,
   addAdminProduct,
   updateAdminProduct,
   deleteAdminProduct,
 } from "../../services/adminProductService";
-
 import AdminSidebar from "../../components/admin/AdminSidebar";
 
 function AdminProducts() {
   const queryClient = useQueryClient();
   const navigate = useNavigate();
-
   const [showForm, setShowForm] = useState(false);
   const [editId, setEditId] = useState(null);
   const [currentPage, setCurrentPage] = useState(1);
-
   const productsPerPage = 5;
-
   const initialProduct = {
     name: "",
     brand: "",
@@ -34,7 +27,6 @@ function AdminProducts() {
     imageKey: "",
     description: "",
   };
-
   const [product, setProduct] = useState(initialProduct);
 
   // Fetch Products
