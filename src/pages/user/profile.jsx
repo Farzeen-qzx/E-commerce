@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
+import toast from "react-hot-toast";
 
 import { getUserProfile, updateUserProfile } from "../../services/authService";
 
@@ -24,13 +25,13 @@ function Profile() {
 
   // Fetch user profile
   const { data, isLoading, isError } = useQuery({
-    queryKey: ["profile", user.id],
+    queryKey: ["profile", user?.id],
 
     queryFn: function () {
       return getUserProfile(user.id);
     },
 
-    enabled: !!user.id,
+    enabled: !!user?.id,
   });
 
   // Update profile
@@ -40,13 +41,21 @@ function Profile() {
     },
 
     onSuccess: function (updatedUser) {
+      // Update Redux authentication data
       dispatch(setCredentials(updatedUser));
 
+      // Refresh profile data
       queryClient.invalidateQueries({
         queryKey: ["profile", user.id],
       });
 
       setIsEditing(false);
+
+      toast.success("Profile updated successfully!");
+    },
+
+    onError: function () {
+      toast.error("Failed to update profile. Please try again.");
     },
   });
 
@@ -93,7 +102,7 @@ function Profile() {
   }
 
   // Error State
-  if (isError) {
+  if (isError || !data) {
     return (
       <p className="text-center py-20 text-red-600">Failed to load profile.</p>
     );
@@ -105,6 +114,7 @@ function Profile() {
         <h1 className="text-3xl font-bold text-green-800 mb-8">My Profile</h1>
 
         {!isEditing ? (
+          // PROFILE VIEW
           <div className="space-y-5">
             <div>
               <p className="text-gray-500">Full Name</p>
@@ -122,8 +132,10 @@ function Profile() {
             </div>
 
             <div>
-              <p className="text-gray-500">Address</p>
-              <p className="font-semibold">{data.address || "Not added"}</p>
+              <p className="text-gray-500">Saved Delivery Address</p>
+              <p className="font-semibold whitespace-pre-line">
+                {data.address || "Not added"}
+              </p>
             </div>
 
             <button
@@ -134,6 +146,7 @@ function Profile() {
             </button>
           </div>
         ) : (
+          // PROFILE EDIT FORM
           <form onSubmit={handleSubmit} className="space-y-5">
             <div>
               <label className="block mb-2 font-medium">Full Name</label>
@@ -169,13 +182,15 @@ function Profile() {
                 onChange={handleChange}
                 required
                 rows="4"
+                placeholder="Enter your complete delivery address"
                 className="w-full border p-3 rounded-lg"
               />
             </div>
 
-            {updateMutation.isError && (
-              <p className="text-red-600">Failed to update profile.</p>
-            )}
+            <p className="text-sm text-gray-500">
+              Your saved delivery address will automatically appear when you
+              proceed to checkout.
+            </p>
 
             <div className="flex gap-4">
               <button
@@ -189,6 +204,7 @@ function Profile() {
               <button
                 type="button"
                 onClick={handleCancel}
+                disabled={updateMutation.isPending}
                 className="border px-6 py-3 rounded-lg"
               >
                 Cancel

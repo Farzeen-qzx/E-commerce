@@ -175,7 +175,9 @@
       "email": "farzeenqzx@gmail.com",
       "password": "Farzeen@123",
       "id": "0q9K49Cf3IA",
-      "isBlocked": true
+      "isBlocked": false,
+      "phone": "8086736116",
+      "address": "mathuraa beauty center and academy\n1-184, Ramayalam Veedhi\nPrakash Rao Peta, uttarpraddesh"
     }
   ],
   "orders": [],

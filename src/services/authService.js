@@ -1,84 +1,90 @@
 import axios from "axios";
+
 const API_URL = import.meta.env.VITE_API_URL;
 
-// Register a new user
+// REGISTER USER
 export async function registerUser(userData) {
+  // Check whether email already exists
+  const response = await axios.get(`${API_URL}/users`, {
+    params: {
+      email: userData.email,
+    },
+  });
 
-    const response = await axios.get(`${API_URL}/users`, {
-        params: {
-            email: userData.email
-        }
-    });
+  if (response.data.length > 0) {
+    throw new Error("Email already exists.");
+  }
 
-    if (response.data.length > 0) {
-        throw new Error("Email already registered");
-    }
+  // Create new user
+  const newUser = {
+    fullName: userData.fullName,
+    email: userData.email,
+    password: userData.password,
+  };
 
-    const result = await axios.post(`${API_URL}/users`, userData);
+  const registerResponse = await axios.post(`${API_URL}/users`, newUser);
 
-    return {
-        id: result.data.id,
-        fullName: result.data.fullName,
-        email: result.data.email
-    };
+  return {
+    id: registerResponse.data.id,
+    fullName: registerResponse.data.fullName,
+    email: registerResponse.data.email,
+  };
 }
 
-// Login an existing user
+// LOGIN USER
 export async function loginUser(email, password) {
+  const response = await axios.get(`${API_URL}/users`, {
+    params: {
+      email: email,
+    },
+  });
 
-    const response = await axios.get(`${API_URL}/users`, {
-        params: {
-            email: email
-        }
-    });
+  const user = response.data.find(function (item) {
+    return item.password === password;
+  });
 
-    const foundUser = response.data.find(function(item) {
-        return item.password === password;
-    });
+  if (!user) {
+    throw new Error("Invalid email or password.");
+  }
 
-    if (!foundUser) {
-        throw new Error("Invalid email or password");
-    }
+  // Check whether user is blocked
+  if (user.isBlocked === true) {
+    throw new Error("Your account has been blocked.");
+  }
 
-    // Check whether the user is blocked
-    if (foundUser.isBlocked === true) {
-        throw new Error("Your account has been blocked. Please contact support.");
-    }
-
-    return {
-        id: foundUser.id,
-        fullName: foundUser.fullName,
-        email: foundUser.email
-    };
+  return {
+    id: user.id,
+    fullName: user.fullName,
+    email: user.email,
+  };
 }
 
-// Get user profile
+// GET USER PROFILE
 export async function getUserProfile(userId) {
+  const response = await axios.get(`${API_URL}/users/${userId}`);
 
-    const response = await axios.get(`${API_URL}/users/${userId}`);
-
-    return {
-        id: response.data.id,
-        fullName: response.data.fullName,
-        email: response.data.email,
-        phone: response.data.phone || "",
-        address: response.data.address || ""
-    };
+  return {
+    id: response.data.id,
+    fullName: response.data.fullName,
+    email: response.data.email,
+    phone: response.data.phone || "",
+    address: response.data.address || "",
+  };
 }
 
-// Update user profile
+// UPDATE USER PROFILE
 export async function updateUserProfile(userId, userData) {
+  const response = await axios.patch(`${API_URL}/users/${userId}`, {
+    fullName: userData.fullName,
+    phone: userData.phone,
+    address: userData.address,
+  });
 
-    const response = await axios.patch(
-        `${API_URL}/users/${userId}`,
-        userData
-    );
-
-    return {
-        id: response.data.id,
-        fullName: response.data.fullName,
-        email: response.data.email,
-        phone: response.data.phone || "",
-        address: response.data.address || ""
-    };
+  return {
+    id: response.data.id,
+    fullName: response.data.fullName,
+    email: response.data.email,
+    phone: response.data.phone || "",
+    address: response.data.address || "",
+  };
 }

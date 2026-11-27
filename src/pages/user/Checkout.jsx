@@ -1,9 +1,13 @@
-import { useState, useRef } from "react";
+import { useState, useRef, useEffect } from "react";
 import { useSelector } from "react-redux";
 import axios from "axios";
-import { useMutation, useQueryClient } from "@tanstack/react-query";
+
+import { useMutation, useQueryClient, useQuery } from "@tanstack/react-query";
+
 import { useNavigate, Link } from "react-router-dom";
 import useCart from "../../hooks/useCart";
+
+import { getUserProfile } from "../../services/authService";
 
 // Import product images from src/assets
 const images = import.meta.glob("../../assets/*.png", {
@@ -15,11 +19,14 @@ const images = import.meta.glob("../../assets/*.png", {
 // Find product image using imageKey
 function getProductImage(product) {
   const imageKey = String(product.imageKey || "").toLowerCase();
+
   let frontImage = "";
   let sideImage = "";
   let backImage = "";
+
   Object.keys(images).forEach(function (path) {
     const filename = path.split("/").pop().toLowerCase();
+
     if (imageKey !== "" && filename.includes(imageKey)) {
       if (filename.startsWith("front")) {
         frontImage = images[path];
@@ -30,11 +37,13 @@ function getProductImage(product) {
       }
     }
   });
+
   return frontImage || sideImage || backImage || product.image || "";
 }
 
 function Checkout() {
   const isSubmitting = useRef(false);
+
   const navigate = useNavigate();
   const queryClient = useQueryClient();
 
@@ -42,9 +51,25 @@ function Checkout() {
   const user = useSelector(function (state) {
     return state.auth.user;
   });
+
   const { cart, isLoading, isError, clearCart } = useCart();
 
   const API_URL = import.meta.env.VITE_API_URL;
+
+  // Fetch saved user profile
+  const {
+    data: savedProfile,
+    isLoading: isProfileLoading,
+    isError: isProfileError,
+  } = useQuery({
+    queryKey: ["profile", user?.id],
+
+    queryFn: function () {
+      return getUserProfile(user.id);
+    },
+
+    enabled: !!user?.id,
+  });
 
   // Form Data
   const [formData, setFormData] = useState({
@@ -54,6 +79,24 @@ function Checkout() {
     address: "",
     paymentMethod: "",
   });
+
+  // Automatically fill saved profile details
+  useEffect(
+    function () {
+      if (savedProfile) {
+        setFormData(function (previousData) {
+          return {
+            ...previousData,
+            fullName: savedProfile.fullName || "",
+            email: savedProfile.email || "",
+            phone: savedProfile.phone || "",
+            address: savedProfile.address || "",
+          };
+        });
+      }
+    },
+    [savedProfile],
+  );
 
   // Calculate Total
   const totalPrice = cart.reduce(function (total, product) {
@@ -72,6 +115,7 @@ function Checkout() {
           const response = await axios.get(
             `${API_URL}/products/${item.productId}`,
           );
+
           return {
             cartItem: item,
             product: response.data,
@@ -108,6 +152,7 @@ function Checkout() {
       // STEP 3: Prepare cart using latest product details
       const validatedCart = latestProducts.map(function (item) {
         const productImage = getProductImage(item.product);
+
         return {
           ...item.cartItem,
           name: item.product.name,
@@ -146,6 +191,7 @@ function Checkout() {
       await Promise.all(
         latestProducts.map(function (item) {
           const newStock = item.product.stock - item.cartItem.quantity;
+
           return axios.patch(`${API_URL}/products/${item.product.id}`, {
             stock: newStock,
           });
@@ -162,9 +208,11 @@ function Checkout() {
       queryClient.invalidateQueries({
         queryKey: ["products"],
       });
+
       queryClient.invalidateQueries({
         queryKey: ["adminProducts"],
       });
+
       queryClient.invalidateQueries({
         queryKey: ["adminDashboard"],
       });
@@ -175,6 +223,7 @@ function Checkout() {
           queryClient.invalidateQueries({
             queryKey: ["cart", user.id],
           });
+
           navigate("/order-confirmation", {
             state: {
               order: order,
@@ -205,6 +254,7 @@ function Checkout() {
   // SUBMIT ORDER
   function handleSubmit(event) {
     event.preventDefault();
+
     if (isSubmitting.current) {
       return;
     }
@@ -224,7 +274,30 @@ function Checkout() {
 
     // Prevent multiple submissions
     isSubmitting.current = true;
+
     createOrder.mutate(formData);
+  }
+
+  // PROFILE LOADING
+  if (isProfileLoading) {
+    return (
+      <div className="min-h-screen flex items-center justify-center">
+        <h2 className="text-xl font-semibold text-green-800">
+          Loading your saved details...
+        </h2>
+      </div>
+    );
+  }
+
+  // PROFILE ERROR
+  if (isProfileError) {
+    return (
+      <div className="min-h-screen flex items-center justify-center">
+        <h2 className="text-xl font-semibold text-red-600">
+          Unable to load your saved profile.
+        </h2>
+      </div>
+    );
   }
 
   // LOADING
@@ -257,7 +330,8 @@ function Checkout() {
         {/* EMPTY CART */}
         {cart.length === 0 ? (
           <div className="bg-white rounded-2xl shadow-sm p-12 text-center">
-            <h2 className="text-2xl font-bold">Your Cart is Empty </h2>
+            <h2 className="text-2xl font-bold">Your Cart is Empty</h2>
+
             <p className="text-gray-500 mt-3">
               Add some products before proceeding to checkout.
             </p>
@@ -266,15 +340,14 @@ function Checkout() {
               to="/products"
               className="inline-block mt-6 bg-green-800 text-white px-8 py-3 rounded-lg hover:bg-green-900"
             >
-              {" "}
-              Continue Shopping{" "}
+              Continue Shopping
             </Link>
           </div>
         ) : (
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
             {/* CUSTOMER DETAILS */}
             <div className="bg-white rounded-xl shadow-sm border p-7">
-              <h2 className="text-2xl font-bold mb-6"> Shipping Details </h2>
+              <h2 className="text-2xl font-bold mb-6">Shipping Details</h2>
 
               <form onSubmit={handleSubmit}>
                 {/* Full Name */}
@@ -305,6 +378,7 @@ function Checkout() {
 
                 {/* Phone */}
                 <label className="font-medium">Phone Number</label>
+
                 <input
                   type="tel"
                   name="phone"
@@ -338,11 +412,11 @@ function Checkout() {
                   onChange={handleChange}
                   className="w-full border p-3 rounded-lg mb-6 mt-2 focus:outline-none focus:ring-2 focus:ring-green-700"
                 >
-                  <option value=""> Select Payment Method </option>
+                  <option value="">Select Payment Method</option>
 
-                  <option value="cod"> Cash on Delivery </option>
+                  <option value="cod">Cash on Delivery</option>
 
-                  <option value="online"> Online Payment </option>
+                  <option value="online">Online Payment</option>
                 </select>
 
                 {/* ERROR MESSAGE */}
@@ -370,6 +444,7 @@ function Checkout() {
 
               {cart.map(function (product) {
                 const productImage = getProductImage(product);
+
                 return (
                   <div
                     key={product.id}
